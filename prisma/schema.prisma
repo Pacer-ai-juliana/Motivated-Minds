@@ -1,0 +1,246 @@
+// Prisma Schema for Motivated Minds
+// Run: npx prisma migrate dev --name init
+// Run: npx prisma generate
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Application system
+model Application {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Application fields
+  name            String
+  email           String   @unique
+  city            String
+  profession      String
+  healthFitness   String
+  whyJoin         String   @db.Text
+  linkedinWebsite String?
+  referral        String?
+  
+  // Status management
+  status          ApplicationStatus @default(PENDING)
+  reviewedAt      DateTime?
+  reviewedBy      String?
+  
+  // Relationship to Member (if accepted)
+  member          Member?
+  
+  @@index([status])
+  @@index([createdAt])
+}
+
+enum ApplicationStatus {
+  PENDING
+  ACCEPTED
+  WAITLIST
+  DECLINED
+}
+
+// Member system (accepted applicants)
+model Member {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // From application
+  application     Application @relation(fields: [applicationId], references: [id])
+  applicationId   String      @unique
+  
+  // Member details
+  name            String
+  email           String      @unique
+  city            String
+  
+  // Membership
+  status          MemberStatus @default(ACTIVE)
+  memberSince     DateTime     @default(now())
+  
+  // Future: Membership payments
+  subscriptions   Subscription[]
+  
+  // Future: Event bookings
+  eventBookings   EventBooking[]
+  
+  @@index([status])
+  @@index([email])
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
+// Future: Membership subscriptions
+model Subscription {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  member          Member   @relation(fields: [memberId], references: [id])
+  memberId        String
+  
+  // Subscription details
+  plan            SubscriptionPlan
+  status          SubscriptionStatus
+  
+  // Billing
+  amount          Int      // in cents
+  currency        String   @default("USD")
+  billingCycle    BillingCycle
+  
+  // Dates
+  startDate       DateTime
+  endDate         DateTime?
+  canceledAt      DateTime?
+  
+  // Payment provider (Stripe)
+  stripeCustomerId      String?
+  stripeSubscriptionId  String?
+  
+  @@index([memberId])
+  @@index([status])
+}
+
+enum SubscriptionPlan {
+  ANNUAL
+  MONTHLY
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELED
+  PAST_DUE
+  UNPAID
+}
+
+enum BillingCycle {
+  MONTHLY
+  ANNUAL
+}
+
+// Future: Events
+model Event {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Event details
+  title           String
+  description     String   @db.Text
+  eventType       EventType
+  
+  // Location
+  city            String
+  venue           String?
+  address         String?
+  
+  // Timing
+  startDate       DateTime
+  endDate         DateTime?
+  
+  // Capacity
+  maxCapacity     Int?
+  memberCapacity  Int?     // Priority slots for members
+  
+  // Pricing
+  price           Int      // in cents
+  currency        String   @default("USD")
+  memberPrice     Int?     // Discounted price for members
+  
+  // Status
+  status          EventStatus @default(DRAFT)
+  publishedAt     DateTime?
+  
+  // Bookings
+  bookings        EventBooking[]
+  
+  @@index([status])
+  @@index([startDate])
+  @@index([city])
+}
+
+enum EventType {
+  SIGNATURE_EXPERIENCE
+  CITY_SOCIAL
+  FITNESS_SESSION
+  WORKSHOP
+  RETREAT
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  SOLD_OUT
+  CANCELED
+  COMPLETED
+}
+
+// Future: Event bookings
+model EventBooking {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  // Relationships
+  event           Event    @relation(fields: [eventId], references: [id])
+  eventId         String
+  
+  member          Member   @relation(fields: [memberId], references: [id])
+  memberId        String
+  
+  // Booking details
+  status          BookingStatus
+  bookedAt        DateTime  @default(now())
+  canceledAt      DateTime?
+  
+  // Payment
+  amountPaid      Int       // in cents
+  currency        String    @default("USD")
+  
+  // Payment provider (Stripe)
+  stripePaymentIntentId String?
+  
+  @@unique([eventId, memberId])
+  @@index([memberId])
+  @@index([eventId])
+  @@index([status])
+}
+
+enum BookingStatus {
+  CONFIRMED
+  WAITLIST
+  CANCELED
+  ATTENDED
+  NO_SHOW
+}
+
+// Admin users
+model Admin {
+  id              String   @id @default(cuid())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  email           String   @unique
+  passwordHash    String
+  name            String
+  
+  role            AdminRole @default(REVIEWER)
+  
+  @@index([email])
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  REVIEWER
+}
