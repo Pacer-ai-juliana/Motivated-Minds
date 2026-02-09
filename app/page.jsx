@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion, useScroll, useTransform, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function MotivatedMinds() {
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function MotivatedMinds() {
   }, []);
 
   return (
-    <div className="bg-white text-black min-h-screen">
+    <div className="bg-white text-black ">
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Spectral:wght@200;300;400;500&display=swap');
         
@@ -29,14 +29,27 @@ export default function MotivatedMinds() {
           box-sizing: border-box;
         }
         
+        html {
+          scroll-behavior: smooth;
+        }
+        
         body {
           font-family: 'Spectral', serif;
           -webkit-font-smoothing: antialiased;
+          overflow-x: hidden;
         }
         
         ::selection {
           background: black;
           color: white;
+        }
+
+        .snap-y {
+          scroll-snap-type: y proximity;
+        }
+
+        .snap-section {
+          scroll-snap-align: start;
         }
 
         @keyframes drawLogo {
@@ -96,8 +109,8 @@ export default function MotivatedMinds() {
         </div>
       </motion.nav>
 
-      {/* Hero with Parallax */}
-      <section className="min-h-screen flex items-center px-8 lg:px-16 pt-40 pb-32 relative overflow-hidden">
+      {/* Hero */}
+      <section className="min-h-screen flex items-center px-8 lg:px-16 pt-40 pb-32 snap-section">
         <div className="max-w-[1200px] mx-auto w-full">
           <motion.h1 
             style={{ y: heroY, opacity: heroOpacity }}
@@ -105,11 +118,12 @@ export default function MotivatedMinds() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.2, ease: [0.65, 0, 0.35, 1] }}
             className="text-7xl md:text-8xl lg:text-[140px] xl:text-[160px] leading-[0.9] tracking-[-0.02em] mb-16"
-            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
           >
-            You are the
-            <br />
-            company you keep.
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}>
+              You are the
+              <br />
+              company you keep.
+            </span>
           </motion.h1>
           
           <motion.div 
@@ -143,257 +157,245 @@ export default function MotivatedMinds() {
         </div>
       </section>
 
-      {/* What is Motivated Minds - Scroll Fade */}
-      <ScrollFadeSection>
-        <section className="border-t border-black/10 py-40 px-8 lg:px-16">
-          <div className="max-w-[1200px] mx-auto">
-            <div className="grid lg:grid-cols-12 gap-20 lg:gap-32">
-              <motion.div 
-                initial={{ opacity: 0, x: -40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1] }}
-                viewport={{ once: true, margin: "-100px" }}
-                className="lg:col-span-4"
-              >
-                <h2 
-                  className="text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight"
-                  style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
-                >
-                  What is
-                  <br />
-                  Motivated
-                  <br />
-                  Minds
-                </h2>
-              </motion.div>
-              <motion.div 
-                initial={{ opacity: 0, x: 40 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: 0.2, ease: [0.65, 0, 0.35, 1] }}
-                viewport={{ once: true, margin: "-100px" }}
-                className="lg:col-span-8 space-y-10"
-              >
-                <p 
-                  className="text-2xl md:text-3xl leading-[1.6]"
-                  style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.9 }}
-                >
-                  Meeting people who match your ambition, values, and pace is harder than it should be.
-                </p>
-                <p 
-                  className="text-xl md:text-2xl leading-[1.7]"
-                  style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.75 }}
-                >
-                  We curate exceptional experiences that bring together high-agency individuals who want to build meaningful relationships, learn from one another, and turn ideas into action.
-                </p>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-      </ScrollFadeSection>
-
-      {/* Membership Philosophy - Scroll Fade */}
-      <ScrollFadeSection>
-        <section className="border-t border-black/10 py-40 px-8 lg:px-16 bg-black text-white">
-          <div className="max-w-[900px] mx-auto">
-            <motion.h2 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
+      {/* What is Motivated Minds */}
+      <section className="min-h-screen flex items-center border-t border-black/10 py-40 px-8 lg:px-16 snap-section">
+        <div className="max-w-[1200px] mx-auto w-full">
+          <div className="grid lg:grid-cols-12 gap-20 lg:gap-32">
+            <motion.div 
+              initial={{ opacity: 0, x: -40 }}
+              whileInView={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1] }}
               viewport={{ once: true, margin: "-100px" }}
-              className="text-4xl md:text-5xl lg:text-6xl mb-20 tracking-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+              className="lg:col-span-4"
             >
-              Philosophy
-            </motion.h2>
-            
-            <div className="space-y-16 text-xl md:text-2xl leading-[1.8]" style={{ fontFamily: "'Spectral', serif", fontWeight: 300 }}>
-              {[
-                "You are someone who moves and builds. You've accomplished things others dream about, yet you remain hungry—not for validation, but for growth.",
-                "Standing out does not always mean feeling connected. This is a room of people who understand your pace, your pressure, your pursuit.",
-                "One rule: leave ego outside. Come open, generous, and ready to build real relationships."
-              ].map((text, i) => (
-                <motion.p
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 0.9, y: 0 }}
-                  transition={{ duration: 0.6, delay: i * 0.1, ease: [0.65, 0, 0.35, 1] }}
-                  viewport={{ once: true, margin: "-50px" }}
-                >
-                  {text}
-                </motion.p>
-              ))}
-            </div>
+              <h2 
+                className="text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight"
+                style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+              >
+                What is
+                <br />
+                Motivated
+                <br />
+                Minds
+              </h2>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, x: 40 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2, ease: [0.65, 0, 0.35, 1] }}
+              viewport={{ once: true, margin: "-100px" }}
+              className="lg:col-span-8 space-y-10"
+            >
+              <p 
+                className="text-2xl md:text-3xl leading-[1.6]"
+                style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.9 }}
+              >
+                Meeting people who match your ambition, values, and pace is harder than it should be.
+              </p>
+              <p 
+                className="text-xl md:text-2xl leading-[1.7]"
+                style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.75 }}
+              >
+                We curate exceptional experiences that bring together high-agency individuals who want to build meaningful relationships, learn from one another, and turn ideas into action.
+              </p>
+            </motion.div>
           </div>
-        </section>
-      </ScrollFadeSection>
+        </div>
+      </section>
 
-      {/* Pillars - Staggered Fade */}
-      <ScrollFadeSection>
-        <section className="border-t border-black/10 py-40 px-8 lg:px-16">
-          <div className="max-w-[1400px] mx-auto">
-            <motion.h2 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1] }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl mb-24 tracking-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
-            >
-              Our Pillars
-            </motion.h2>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-20 gap-y-24">
-              {[
-                { title: 'Health', description: 'Build the energy and resilience required for an ambitious life.' },
-                { title: 'Financial Growth', description: 'Create real wealth through disciplined decisions and shared insight.' },
-                { title: 'Ideas', description: 'Expand how you think. Learn from people who challenge your perspective.' },
-                { title: 'Fitness', description: 'Train with intention alongside others who push your edge.' },
-                { title: 'Give Back', description: 'Contribute to communities and causes that create lasting impact.' }
-              ].map((pillar, idx) => (
-                <motion.div 
-                  key={idx}
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.65, 0, 0.35, 1] }}
-                  viewport={{ once: true, margin: "-50px" }}
-                >
-                  <h3 
-                    className="text-2xl md:text-3xl mb-6 tracking-tight"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}
-                  >
-                    {pillar.title}
-                  </h3>
-                  <p 
-                    className="text-lg leading-[1.7]"
-                    style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.7 }}
-                  >
-                    {pillar.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
+      {/* Membership Philosophy */}
+      <section className="min-h-screen flex items-center border-t border-black/10 py-40 px-8 lg:px-16 bg-black text-white snap-section">
+        <div className="max-w-[900px] mx-auto w-full">
+          <motion.h2 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1] }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-4xl md:text-5xl lg:text-6xl mb-20 tracking-tight"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+          >
+            Philosophy
+          </motion.h2>
+          
+          <div className="space-y-16 text-xl md:text-2xl leading-[1.8]" style={{ fontFamily: "'Spectral', serif", fontWeight: 300 }}>
+            {[
+              "You are someone who moves and builds. You've accomplished things others dream about, yet you remain hungry—not for validation, but for growth.",
+              "Standing out does not always mean feeling connected. This is a room of people who understand your pace, your pressure, your pursuit.",
+              "One rule: leave ego outside. Come open, generous, and ready to build real relationships."
+            ].map((text, i) => (
+              <motion.p
+                key={i}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 0.9, y: 0 }}
+                transition={{ duration: 0.6, delay: i * 0.1, ease: [0.65, 0, 0.35, 1] }}
+                viewport={{ once: true, margin: "-50px" }}
+              >
+                {text}
+              </motion.p>
+            ))}
           </div>
-        </section>
-      </ScrollFadeSection>
+        </div>
+      </section>
+
+      {/* Pillars */}
+      <section className="min-h-screen flex items-center border-t border-black/10 py-40 px-8 lg:px-16 snap-section">
+        <div className="max-w-[1400px] mx-auto w-full">
+          <motion.h2 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.65, 0, 0.35, 1] }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl lg:text-6xl mb-24 tracking-tight"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+          >
+            Our Pillars
+          </motion.h2>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-20 gap-y-24">
+            {[
+              { title: 'Health', description: 'Build the energy and resilience required for an ambitious life.' },
+              { title: 'Financial Growth', description: 'Create real wealth through disciplined decisions and shared insight.' },
+              { title: 'Ideas', description: 'Expand how you think. Learn from people who challenge your perspective.' },
+              { title: 'Fitness', description: 'Train with intention alongside others who push your edge.' },
+              { title: 'Give Back', description: 'Contribute to communities and causes that create lasting impact.' }
+            ].map((pillar, idx) => (
+              <motion.div 
+                key={idx}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.1, ease: [0.65, 0, 0.35, 1] }}
+                viewport={{ once: true, margin: "-50px" }}
+              >
+                <h3 
+                  className="text-2xl md:text-3xl mb-6 tracking-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 500 }}
+                >
+                  {pillar.title}
+                </h3>
+                <p 
+                  className="text-lg leading-[1.7]"
+                  style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.7 }}
+                >
+                  {pillar.description}
+                </p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Programming */}
-      <ScrollFadeSection>
-        <section className="border-t border-black/10 py-40 px-8 lg:px-16 bg-black text-white">
-          <div className="max-w-[1200px] mx-auto">
-            <motion.h2 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl lg:text-6xl mb-24 tracking-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
-            >
-              Programming
-            </motion.h2>
-            
-            <div className="grid md:grid-cols-2 gap-20">
-              {[
-                {
-                  title: 'Signature Experiences',
-                  description: 'Intimate dinners, weekend escapes, and offsite retreats that create space for deeper conversation and real momentum.'
-                },
-                {
-                  title: 'City Socials',
-                  description: 'We begin in New York. As the community grows, new chapters will launch around the world.'
-                },
-                {
-                  title: 'Fitness Sessions',
-                  description: 'Train together. Build strength in body and mind alongside peers who take it seriously.'
-                }
-              ].map((program, idx) => (
-                <motion.div 
-                  key={idx} 
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: idx * 0.15 }}
-                  viewport={{ once: true, margin: "-50px" }}
-                  className="border-t border-white/20 pt-8"
+      <section className="min-h-screen flex items-center border-t border-black/10 py-40 px-8 lg:px-16 bg-black text-white snap-section">
+        <div className="max-w-[1200px] mx-auto w-full">
+          <motion.h2 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-4xl md:text-5xl lg:text-6xl mb-24 tracking-tight"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+          >
+            Programming
+          </motion.h2>
+          
+          <div className="grid md:grid-cols-2 gap-20">
+            {[
+              {
+                title: 'Signature Experiences',
+                description: 'Intimate dinners, weekend escapes, and offsite retreats that create space for deeper conversation and real momentum.'
+              },
+              {
+                title: 'City Socials',
+                description: 'We begin in New York. As the community grows, new chapters will launch around the world.'
+              },
+              {
+                title: 'Fitness Sessions',
+                description: 'Train together. Build strength in body and mind alongside peers who take it seriously.'
+              }
+            ].map((program, idx) => (
+              <motion.div 
+                key={idx} 
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: idx * 0.15 }}
+                viewport={{ once: true, margin: "-50px" }}
+                className="border-t border-white/20 pt-8"
+              >
+                <h3 
+                  className="text-2xl md:text-3xl mb-5 tracking-tight"
+                  style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
                 >
-                  <h3 
-                    className="text-2xl md:text-3xl mb-5 tracking-tight"
-                    style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
-                  >
-                    {program.title}
-                  </h3>
-                  <p 
-                    className="text-lg md:text-xl leading-[1.7]"
-                    style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.75 }}
-                  >
-                    {program.description}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
+                  {program.title}
+                </h3>
+                <p 
+                  className="text-lg md:text-xl leading-[1.7]"
+                  style={{ fontFamily: "'Spectral', serif", fontWeight: 300, opacity: 0.75 }}
+                >
+                  {program.description}
+                </p>
+              </motion.div>
+            ))}
           </div>
-        </section>
-      </ScrollFadeSection>
+        </div>
+      </section>
 
-      {/* NYC + Global - Parallax */}
-      <ScrollFadeSection>
-        <section className="border-t border-black/10 py-48 px-8 lg:px-16">
-          <div className="max-w-[1000px] mx-auto text-center">
-            <motion.h2 
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 1, ease: [0.65, 0, 0.35, 1] }}
-              viewport={{ once: true }}
-              className="text-6xl md:text-7xl lg:text-8xl xl:text-[120px] leading-[0.95] tracking-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
-            >
-              Born in New York.
-              <br />
-              Connected everywhere.
-            </motion.h2>
-          </div>
-        </section>
-      </ScrollFadeSection>
+      {/* NYC + Global */}
+      <section className="min-h-screen flex items-center border-t border-black/10 py-48 px-8 lg:px-16 snap-section">
+        <div className="max-w-[1000px] mx-auto text-center w-full">
+          <motion.h2 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: [0.65, 0, 0.35, 1] }}
+            viewport={{ once: true }}
+            className="text-6xl md:text-7xl lg:text-8xl xl:text-[120px] leading-[0.95] tracking-tight"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+          >
+            Born in New York.
+            <br />
+            Connected everywhere.
+          </motion.h2>
+        </div>
+      </section>
 
       {/* Final CTA */}
-      <ScrollFadeSection>
-        <section className="border-t border-black/10 py-40 px-8 lg:px-16 bg-black text-white">
-          <div className="max-w-[800px] mx-auto text-center">
-            <motion.h2 
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-5xl md:text-6xl lg:text-7xl mb-12 tracking-tight"
-              style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
-            >
-              Ready to apply?
-            </motion.h2>
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 0.8, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              viewport={{ once: true }}
-              className="text-2xl md:text-3xl mb-16 leading-[1.6]"
-              style={{ fontFamily: "'Spectral', serif", fontWeight: 300 }}
-            >
-              Membership is curated. Applications are reviewed individually.
-            </motion.p>
-            
-            <motion.button
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => router.push('/apply')}
-              className="bg-white text-black px-12 py-5 text-xs tracking-[0.25em] uppercase"
-              style={{ fontFamily: "'Spectral', serif", fontWeight: 400 }}
-            >
-              Apply
-            </motion.button>
-          </div>
-        </section>
-      </ScrollFadeSection>
+      <section className="min-h-screen flex items-center border-t border-black/10 py-40 px-8 lg:px-16 bg-black text-white snap-section">
+        <div className="max-w-[800px] mx-auto text-center w-full">
+          <motion.h2 
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-5xl md:text-6xl lg:text-7xl mb-12 tracking-tight"
+            style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 400 }}
+          >
+            Ready to apply?
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 0.8, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            viewport={{ once: true }}
+            className="text-2xl md:text-3xl mb-16 leading-[1.6]"
+            style={{ fontFamily: "'Spectral', serif", fontWeight: 300 }}
+          >
+            Membership is curated. Applications are reviewed individually.
+          </motion.p>
+          
+          <motion.button
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            viewport={{ once: true }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            onClick={() => router.push('/apply')}
+            className="bg-white text-black px-12 py-5 text-xs tracking-[0.25em] uppercase"
+            style={{ fontFamily: "'Spectral', serif", fontWeight: 400 }}
+          >
+            Apply
+          </motion.button>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="border-t border-black/10 py-16 px-8 lg:px-16">
@@ -404,22 +406,5 @@ export default function MotivatedMinds() {
         </div>
       </footer>
     </div>
-  );
-}
-
-// Helper component for scroll-triggered sections
-function ScrollFadeSection({ children }) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0 }}
-      animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-      transition={{ duration: 0.6 }}
-    >
-      {children}
-    </motion.div>
   );
 }
